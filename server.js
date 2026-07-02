@@ -334,6 +334,28 @@ app.post('/api/notifications', async (req, res) => {
   }
 });
 
+// ===== USERS API =====
+app.get('/api/users', (req, res) => {
+  try {
+    const users = JSON.parse(fs.readFileSync(path.join(DATA_DIR, 'users.json'), 'utf8'));
+    res.json({ success: true, data: users });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+app.get('/api/users/:id', (req, res) => {
+  try {
+    const users = JSON.parse(fs.readFileSync(path.join(DATA_DIR, 'users.json'), 'utf8'));
+    const user = users.find(u => u.id === req.params.id);
+    if (!user) {
+      return res.status(404).json({ success: false, error: 'Пользователь не найден' });
+    }
+    res.json({ success: true, data: user });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
 // ===== BITRIX24 IFRAME HANDLER =====
 // Битрикс24 открывает приложение через POST с AUTH_ID, DOMAIN, USER_ID
 app.all('/', (req, res) => {
@@ -375,3 +397,4 @@ app.all('/', (req, res) => {
 app.listen(PORT, () => {
   console.log(`АкмеСлот сервер запущен на порту ${PORT}`);
 });
+

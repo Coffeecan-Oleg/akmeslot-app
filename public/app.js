@@ -27,42 +27,23 @@ class AkmeSlotApp {
   }
 
   async loadUser() {
-    // Пробуем получить пользователя разными способами
     const userId = this.bxParams.userId;
     
-    // Способ 1: user.current (требует полных прав)
+    // Пробуем получить пользователя с сервера (у сервера есть полный доступ)
     try {
-      const data = await this.callBitrix24('user.current');
-      console.log("[AkmeSlot] User via user.current:", data);
-      this.user = {
-        id: data.ID,
-        name: (data.NAME || '') + ' ' + (data.LAST_NAME || ''),
-        email: data.EMAIL || '',
-        avatar: data.PERSONAL_PHOTO || ''
-      };
-      return;
-    } catch (e) {
-      console.log("[AkmeSlot] user.current failed:", e.message);
-    }
-    
-    // Способ 2: user.get с ID (меньше прав)
-    if (userId) {
-      try {
-        const data = await this.callBitrix24('user.get', { ID: userId });
-        console.log("[AkmeSlot] User via user.get:", data);
-        if (data && data.length > 0) {
-          const u = data[0];
-          this.user = {
-            id: u.ID,
-            name: (u.NAME || '') + ' ' + (u.LAST_NAME || ''),
-            email: u.EMAIL || '',
-            avatar: u.PERSONAL_PHOTO || ''
-          };
-          return;
-        }
-      } catch (e) {
-        console.log("[AkmeSlot] user.get failed:", e.message);
+      const response = await fetch(`/api/users/${userId}`);
+      const data = await response.json();
+      if (data.success && data.data) {
+        console.log("[AkmeSlot] User from server:", data.data);
+        this.user = {
+          id: data.data.id,
+          name: data.data.name,
+          email: data.data.email || ''
+        };
+        return;
       }
+    } catch (e) {
+      console.log("[AkmeSlot] Server user lookup failed:", e.message);
     }
     
     // Fallback: используем ID из параметров
@@ -249,3 +230,4 @@ class AkmeSlotApp {
 document.addEventListener('DOMContentLoaded', () => {
   window.app = new AkmeSlotApp();
 });
+
