@@ -28,22 +28,45 @@ class AkmeSlotApp {
 
   async loadUser() {
     const userId = this.bxParams.userId;
+    const authId = this.bxParams.authId;
+    const domain = this.bxParams.domain;
     
-    // Пробуем получить пользователя с сервера (у сервера есть полный доступ)
-    try {
-      const response = await fetch(`/api/users/${userId}`);
-      const data = await response.json();
-      if (data.success && data.data) {
-        console.log("[AkmeSlot] User from server:", data.data);
-        this.user = {
-          id: data.data.id,
-          name: data.data.name,
-          email: data.data.email || ''
-        };
-        return;
+    // Способ 1: Получаем пользователя через сервер (/api/me использует AUTH_ID)
+    if (authId && domain) {
+      try {
+        const response = await fetch(`/api/me?auth=${authId}&domain=${domain}`);
+        const data = await response.json();
+        if (data.success && data.data) {
+          console.log("[AkmeSlot] User from /api/me:", data.data);
+          this.user = {
+            id: data.data.id,
+            name: data.data.name,
+            email: data.data.email || ''
+          };
+          return;
+        }
+      } catch (e) {
+        console.log("[AkmeSlot] /api/me failed:", e.message);
       }
-    } catch (e) {
-      console.log("[AkmeSlot] Server user lookup failed:", e.message);
+    }
+    
+    // Способ 2: Пробуем получить пользователя с сервера по ID
+    if (userId) {
+      try {
+        const response = await fetch(`/api/users/${userId}`);
+        const data = await response.json();
+        if (data.success && data.data) {
+          console.log("[AkmeSlot] User from server:", data.data);
+          this.user = {
+            id: data.data.id,
+            name: data.data.name,
+            email: data.data.email || ''
+          };
+          return;
+        }
+      } catch (e) {
+        console.log("[AkmeSlot] Server user lookup failed:", e.message);
+      }
     }
     
     // Fallback: используем ID из параметров
@@ -230,4 +253,5 @@ class AkmeSlotApp {
 document.addEventListener('DOMContentLoaded', () => {
   window.app = new AkmeSlotApp();
 });
+
 

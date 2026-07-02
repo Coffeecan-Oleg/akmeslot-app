@@ -383,6 +383,39 @@ app.get('/api/users/:id', (req, res) => {
     res.status(500).json({ success: false, error: error.message });
   }
 });
+// ===== ME API (get current user via Bitrix24 auth token) =====
+app.get('/api/me', async (req, res) => {
+  try {
+    const authId = req.query.auth;
+    const domain = req.query.domain;
+    
+    if (!authId || !domain) {
+      return res.status(400).json({ success: false, error: 'Missing auth or domain' });
+    }
+    
+    // Call Bitrix24 user.current with the provided auth token
+    const bxUrl = `https://${domain}/rest/user.current?auth=${authId}`;
+    const response = await fetch(bxUrl);
+    const data = await response.json();
+    
+    if (data.error) {
+      return res.status(401).json({ success: false, error: data.error_description || data.error });
+    }
+    
+    const user = data.result;
+    res.json({ 
+      success: true, 
+      data: {
+        id: user.ID,
+        name: (user.NAME || '') + ' ' + (user.LAST_NAME || ''),
+        email: user.EMAIL || ''
+      }
+    });
+  } catch (error) {
+    console.error('[Server] /api/me error:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
 // ===== BITRIX24 IFRAME HANDLER =====
 // Битрикс24 открывает приложение через POST с AUTH_ID, DOMAIN, USER_ID
 app.all('/', (req, res) => {
@@ -424,5 +457,6 @@ app.all('/', (req, res) => {
 app.listen(PORT, () => {
   console.log(`АкмеСлот сервер запущен на порту ${PORT}`);
 });
+
 
 
