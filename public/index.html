@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
@@ -8,84 +8,22 @@
 </head>
 <body>
   <div id="app">
-    <header class="header">
-      <h1 class="logo">🏢 АкмеСлот</h1>
-      <nav class="nav">
-        <button class="nav-btn active" data-view="resources">Ресурсы</button>
-        <button class="nav-btn" data-view="bookings">Мои бронирования</button>
-        <button class="nav-btn" data-view="admin">Администрирование</button>
-      </nav>
-    </header>
-    
-    <main class="main">
-      <!-- Список ресурсов -->
-      <section id="resources-view" class="view active">
-        <div class="filters">
-          <select id="category-filter">
-            <option value="">Все категории</option>
-          </select>
-          <input type="date" id="date-filter">
-        </div>
-        <div id="resources-list" class="resources-grid"></div>
-      </section>
-      
-      <!-- Мои бронирования -->
-      <section id="bookings-view" class="view">
-        <h2>Мои бронирования</h2>
-        <div id="bookings-list" class="bookings-list"></div>
-      </section>
-      
-      <!-- Администрирование -->
-      <section id="admin-view" class="view">
-        <div class="admin-tabs">
-          <button class="admin-tab active" data-tab="resources">Ресурсы</button>
-          <button class="admin-tab" data-tab="logs">Журнал</button>
-        </div>
-        <div id="admin-content"></div>
-      </section>
-    </main>
-    
-    <!-- Модальное окно бронирования -->
-    <div id="booking-modal" class="modal">
-      <div class="modal-content">
-        <span class="close">&times;</span>
-        <h2 id="modal-title">Бронирование</h2>
-        <form id="booking-form">
-          <input type="hidden" id="booking-resource-id">
-          <div class="form-group">
-            <label>Ресурс</label>
-            <input type="text" id="booking-resource-name" readonly>
-          </div>
-          <div class="form-group">
-            <label>Дата</label>
-            <input type="date" id="booking-date" required>
-          </div>
-          <div class="form-group">
-            <label>Время начала</label>
-            <select id="booking-time-from" required></select>
-          </div>
-          <div class="form-group">
-            <label>Длительность</label>
-            <select id="booking-duration" required>
-              <option value="30">30 минут</option>
-              <option value="60">1 час</option>
-              <option value="120">2 часа</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Название</label>
-            <input type="text" id="booking-title" required placeholder="Встреча...">
-          </div>
-          <div class="form-group">
-            <label>Описание</label>
-            <textarea id="booking-description"></textarea>
-          </div>
-          <button type="submit" class="btn btn-primary">Забронировать</button>
-        </form>
+    <div id="loading" style="display:flex;align-items:center;justify-content:center;height:100vh;font-family:Arial,sans-serif">
+      <div style="text-align:center">
+        <div style="font-size:48px;margin-bottom:20px">⏳</div>
+        <p>Загрузка АкмеСлот...</p>
       </div>
     </div>
   </div>
-  <script src="js/api.js"></script>
-  <script src="js/app.js"></script>
+  <script>
+    // Для прямого доступа (не из Битрикс24) — демо-режим
+    window.BX24_PARAMS = {
+      authId: 'demo',
+      domain: 'akmetron.bitrix24.ru',
+      userId: '3318',
+      appSid: ''
+    };
+  </script>
+  <script src="app.js"></script>
 </body>
 </html>
