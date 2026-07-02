@@ -344,9 +344,36 @@ app.get('/api/users', (req, res) => {
   }
 });
 
-app.get('/api/users/:id', (req, res) => {
+// Встроенные пользователи (fallback если файл не доступен)
+const BUILTIN_USERS = [
+  { id: "1", name: "Павел Степин", email: "pavelss@akmetron.ru" },
+  { id: "3", name: "Анна Суринова", email: "annass@akmetron.ru" },
+  { id: "5", name: "Гарник Цветков", email: "garnikah@integris.ru" },
+  { id: "3318", name: "Олег Кромин", email: "olegak@akmetron.ru" }
+];
+
+function getUsers() {
   try {
     const users = JSON.parse(fs.readFileSync(path.join(DATA_DIR, 'users.json'), 'utf8'));
+    return users;
+  } catch (e) {
+    console.log('[Server] Using builtin users');
+    return BUILTIN_USERS;
+  }
+}
+
+app.get('/api/users', (req, res) => {
+  try {
+    const users = getUsers();
+    res.json({ success: true, data: users });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+app.get('/api/users/:id', (req, res) => {
+  try {
+    const users = getUsers();
     const user = users.find(u => u.id === req.params.id);
     if (!user) {
       return res.status(404).json({ success: false, error: 'Пользователь не найден' });
@@ -397,4 +424,5 @@ app.all('/', (req, res) => {
 app.listen(PORT, () => {
   console.log(`АкмеСлот сервер запущен на порту ${PORT}`);
 });
+
 
