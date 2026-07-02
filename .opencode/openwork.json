@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "workspace": {
+    "name": "Вайбкод",
+    "createdAt": 1782312625487,
+    "preset": "starter"
+  },
+  "authorizedRoots": [
+    "C:\\Work\\Вайбкод"
+  ],
+  "reload": null
+}

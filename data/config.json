@@ -1,0 +1,39 @@
+{
+  "categories": [
+    {
+      "id": "workspace",
+      "name": "Рабочее место",
+      "icon": "💼"
+    },
+    {
+      "id": "meeting_room",
+      "name": "Переговорная",
+      "icon": "🏢"
+    },
+    {
+      "id": "office",
+      "name": "Кабинет",
+      "icon": "🚪"
+    },
+    {
+      "id": "car",
+      "name": "Автомобиль",
+      "icon": "🚗"
+    },
+    {
+      "id": "equipment",
+      "name": "Оборудование",
+      "icon": "🔧"
+    },
+    {
+      "id": "other",
+      "name": "Другое",
+      "icon": "📦"
+    }
+  ],
+  "roles": {
+    "user": "Пользователь",
+    "resource_admin": "Администратор ресурса",
+    "system_admin": "Системный администратор"
+  }
+}

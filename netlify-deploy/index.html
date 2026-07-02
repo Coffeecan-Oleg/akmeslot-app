@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AkmeSlot - Diagnostic</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; background: #f5f5f5; }
+    .box { background: white; padding: 20px; margin: 10px 0; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    .error { color: #dc2626; }
+    .success { color: #16a34a; }
+    .info { color: #2563eb; }
+    pre { background: #f3f4f6; padding: 10px; border-radius: 4px; overflow-x: auto; }
+  </style>
+</head>
+<body>
+  <h1>AkmeSlot - Diagnostic Mode</h1>
+  
+  <div class="box">
+    <h2>URL Parameters</h2>
+    <pre id="url-params">Loading...</pre>
+  </div>
+  
+  <div class="box">
+    <h2>POST Body (if any)</h2>
+    <pre id="post-body">Checking...</pre>
+  </div>
+  
+  <div class="box">
+    <h2>API Test</h2>
+    <button onclick="testApi()">Test Bitrix24 API</button>
+    <pre id="api-result">Click button to test</pre>
+  </div>
+  
+  <div class="box">
+    <h2>Instructions</h2>
+    <p>If you see this page in Bitrix24 iframe:</p>
+    <ol>
+      <li>Check "URL Parameters" - should contain AUTH_ID</li>
+      <li>Click "Test Bitrix24 API" - should show user data</li>
+      <li>If AUTH_ID is missing, the app was opened directly (not from Bitrix24 menu)</li>
+    </ol>
+  </div>
+
+  <script>
+    // Show URL params
+    const params = new URLSearchParams(window.location.search);
+    let paramText = "";
+    for (const [key, value] of params) {
+      paramText += key + ": " + (value ? value.substring(0, 20) + "..." : "empty") + "\n";
+    }
+    document.getElementById("url-params").textContent = paramText || "No URL parameters found";
+    
+    // Check for POST body (not available in JS, but we can check referrer)
+    document.getElementById("post-body").textContent = "Referrer: " + (document.referrer || "none") + "\nMethod: " + (window.performance && window.performance.getEntriesByType ? "Check Network tab" : "unknown");
+    
+    async function testApi() {
+      const authId = params.get("AUTH_ID");
+      const domain = params.get("DOMAIN");
+      
+      if (!authId) {
+        document.getElementById("api-result").textContent = "ERROR: No AUTH_ID in URL. Open from Bitrix24 menu.";
+        return;
+      }
+      
+      document.getElementById("api-result").textContent = "Testing...";
+      
+      try {
+        const apiUrl = "https://" + domain + "/rest/user.current?auth=" + authId;
+        const response = await fetch(apiUrl);
+        const data = await response.json();
+        document.getElementById("api-result").textContent = JSON.stringify(data, null, 2);
+      } catch (e) {
+        document.getElementById("api-result").textContent = "Error: " + e.message;
+      }
+    }
+  </script>
+</body>
+</html>
