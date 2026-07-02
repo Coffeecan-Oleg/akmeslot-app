@@ -34,7 +34,12 @@ class AkmeSlotApp {
     // Способ 1: Получаем пользователя через сервер (/api/me использует AUTH_ID)
     if (authId && domain) {
       try {
-        const response = await fetch(`/api/me?auth=${authId}&domain=${domain}`);
+        const appSid = this.bxParams.appSid;
+        let url = `/api/me?auth=${authId}&domain=${domain}`;
+        if (appSid) {
+          url += `&app_sid=${appSid}`;
+        }
+        const response = await fetch(url);
         const data = await response.json();
         if (data.success && data.data) {
           console.log("[AkmeSlot] User from /api/me:", data.data);
@@ -253,5 +258,6 @@ class AkmeSlotApp {
 document.addEventListener('DOMContentLoaded', () => {
   window.app = new AkmeSlotApp();
 });
+
 
 

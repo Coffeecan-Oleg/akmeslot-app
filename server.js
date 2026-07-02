@@ -388,12 +388,44 @@ app.get('/api/me', async (req, res) => {
   try {
     const authId = req.query.auth;
     const domain = req.query.domain;
+    const appSid = req.query.app_sid;
     
     if (!authId || !domain) {
       return res.status(400).json({ success: false, error: 'Missing auth or domain' });
     }
     
-    // Call Bitrix24 user.current with the provided auth token
+    // Try app.info with APP_SID first (works with application token)
+    if (appSid) {
+      try {
+        const appUrl = `https://${domain}/rest/app.info?auth=${appSid}`;
+        const appResponse = await fetch(appUrl);
+        const appData = await appResponse.json();
+        console.log('[Server] app.info response:', appData);
+        
+        if (appData.result && appData.result.ID) {
+          // Got app info, now try to get user with AUTH_ID
+          const userUrl = `https://${domain}/rest/user.current?auth=${authId}`;
+          const userResponse = await fetch(userUrl);
+          const userData = await userResponse.json();
+          
+          if (userData.result) {
+            const user = userData.result;
+            return res.json({ 
+              success: true, 
+              data: {
+                id: user.ID,
+                name: (user.NAME || '') + ' ' + (user.LAST_NAME || ''),
+                email: user.EMAIL || ''
+              }
+            });
+          }
+        }
+      } catch (e) {
+        console.log('[Server] app.info failed:', e.message);
+      }
+    }
+    
+    // Fallback: try user.current directly
     const bxUrl = `https://${domain}/rest/user.current?auth=${authId}`;
     const response = await fetch(bxUrl);
     const data = await response.json();
@@ -457,6 +489,7 @@ app.all('/', (req, res) => {
 app.listen(PORT, () => {
   console.log(`АкмеСлот сервер запущен на порту ${PORT}`);
 });
+
 
 
 
