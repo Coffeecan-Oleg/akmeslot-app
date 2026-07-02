@@ -1,4 +1,4 @@
-﻿// AkmeSlot - Bitrix24 Embedded Booking System v4 (No BX24 SDK)
+﻿// AkmeSlot - Bitrix24 Embedded Booking System v4.1 (Fixed auth)
 class AkmeSlotApp {
   constructor() {
     this.app = document.getElementById("app");
@@ -12,7 +12,7 @@ class AkmeSlotApp {
   }
 
   async init() {
-    console.log("[AkmeSlot] v4 Starting...");
+    console.log("[AkmeSlot] v4.1 Starting...");
     console.log("[AkmeSlot] Params:", this.bxParams);
     
     if (!this.bxParams.authId) {
@@ -27,19 +27,51 @@ class AkmeSlotApp {
   }
 
   async loadUser() {
+    // Пробуем получить пользователя разными способами
+    const userId = this.bxParams.userId;
+    
+    // Способ 1: user.current (требует полных прав)
     try {
       const data = await this.callBitrix24('user.current');
-      console.log("[AkmeSlot] User:", data);
+      console.log("[AkmeSlot] User via user.current:", data);
       this.user = {
         id: data.ID,
         name: (data.NAME || '') + ' ' + (data.LAST_NAME || ''),
         email: data.EMAIL || '',
         avatar: data.PERSONAL_PHOTO || ''
       };
+      return;
     } catch (e) {
-      console.error("[AkmeSlot] Error loading user:", e);
-      this.user = { id: this.bxParams.userId || 'unknown', name: 'Пользователь', email: '' };
+      console.log("[AkmeSlot] user.current failed:", e.message);
     }
+    
+    // Способ 2: user.get с ID (меньше прав)
+    if (userId) {
+      try {
+        const data = await this.callBitrix24('user.get', { ID: userId });
+        console.log("[AkmeSlot] User via user.get:", data);
+        if (data && data.length > 0) {
+          const u = data[0];
+          this.user = {
+            id: u.ID,
+            name: (u.NAME || '') + ' ' + (u.LAST_NAME || ''),
+            email: u.EMAIL || '',
+            avatar: u.PERSONAL_PHOTO || ''
+          };
+          return;
+        }
+      } catch (e) {
+        console.log("[AkmeSlot] user.get failed:", e.message);
+      }
+    }
+    
+    // Fallback: используем ID из параметров
+    console.log("[AkmeSlot] Using fallback user");
+    this.user = { 
+      id: userId || 'unknown', 
+      name: userId ? `Пользователь #${userId}` : 'Пользователь', 
+      email: '' 
+    };
   }
 
   async callBitrix24(method, params = {}) {
