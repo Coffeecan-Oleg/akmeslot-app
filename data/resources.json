@@ -1,3 +1,88 @@
-{
-  "resources": []
+﻿{
+  "resources": [
+    {
+      "id": "mr_101",
+      "name": "Переговорная 101",
+      "type": "meeting_room",
+      "description": "Переговорная на 6 человек, проектор, доска",
+      "status": "available",
+      "location": "1 этаж, офис 101",
+      "capacity": 6,
+      "amenities": ["проектор", "доска", "wi-fi"],
+      "createdAt": "2026-07-02T10:00:00.000Z",
+      "updatedAt": "2026-07-02T10:00:00.000Z"
+    },
+    {
+      "id": "mr_102",
+      "name": "Переговорная 102",
+      "type": "meeting_room",
+      "description": "Переговорная на 4 человека, TV экран",
+      "status": "available",
+      "location": "1 этаж, офис 102",
+      "capacity": 4,
+      "amenities": ["TV", "wi-fi"],
+      "createdAt": "2026-07-02T10:00:00.000Z",
+      "updatedAt": "2026-07-02T10:00:00.000Z"
+    },
+    {
+      "id": "wp_a1",
+      "name": "Рабочее место A1",
+      "type": "workplace",
+      "description": "Отдельное рабочее место у окна",
+      "status": "available",
+      "location": "2 этаж, зона А",
+      "capacity": 1,
+      "amenities": ["монитор", "док-станция"],
+      "createdAt": "2026-07-02T10:00:00.000Z",
+      "updatedAt": "2026-07-02T10:00:00.000Z"
+    },
+    {
+      "id": "wp_a2",
+      "name": "Рабочее место A2",
+      "type": "workplace",
+      "description": "Рабочее место в open-space",
+      "status": "available",
+      "location": "2 этаж, зона А",
+      "capacity": 1,
+      "amenities": ["монитор"],
+      "createdAt": "2026-07-02T10:00:00.000Z",
+      "updatedAt": "2026-07-02T10:00:00.000Z"
+    },
+    {
+      "id": "car_001",
+      "name": "Toyota Camry",
+      "type": "car",
+      "description": "Служебный автомобиль, бизнес-класс",
+      "status": "available",
+      "location": "Парковка, место 1",
+      "capacity": 4,
+      "amenities": ["кондиционер", "GPS"],
+      "createdAt": "2026-07-02T10:00:00.000Z",
+      "updatedAt": "2026-07-02T10:00:00.000Z"
+    },
+    {
+      "id": "car_002",
+      "name": "Hyundai Solaris",
+      "type": "car",
+      "description": "Служебный автомобиль, эконом-класс",
+      "status": "available",
+      "location": "Парковка, место 2",
+      "capacity": 4,
+      "amenities": ["кондиционер"],
+      "createdAt": "2026-07-02T10:00:00.000Z",
+      "updatedAt": "2026-07-02T10:00:00.000Z"
+    },
+    {
+      "id": "eq_proj",
+      "name": "Проектор Epson",
+      "type": "equipment",
+      "description": "Портативный проектор, 3000 люмен",
+      "status": "available",
+      "location": "Кладовая, полка 3",
+      "capacity": 1,
+      "amenities": ["HDMI", "USB"],
+      "createdAt": "2026-07-02T10:00:00.000Z",
+      "updatedAt": "2026-07-02T10:00:00.000Z"
+    }
+  ]
 }
