@@ -1,4 +1,4 @@
-﻿// AkmeSlot - Bitrix24 Embedded Booking System v4.1 (Fixed auth)
+﻿// AkmeSlot - Bitrix24 Embedded Booking System v4.5 (Fixed auth)
 class AkmeSlotApp {
   constructor() {
     this.app = document.getElementById("app");
@@ -12,7 +12,7 @@ class AkmeSlotApp {
   }
 
   async init() {
-    console.log("[AkmeSlot] v4.1 Starting...");
+    console.log("[AkmeSlot] v4.5 Starting...");
     console.log("[AkmeSlot] Params:", this.bxParams);
     
     if (!this.bxParams.authId) {
@@ -258,6 +258,7 @@ class AkmeSlotApp {
 document.addEventListener('DOMContentLoaded', () => {
   window.app = new AkmeSlotApp();
 });
+
 
 
 
